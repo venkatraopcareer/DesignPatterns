@@ -59,3 +59,23 @@
 
    pay = new StripeAdapter(new StripePayment());
    pay.Pay(100);
+
+
+var serviceProvider = new ServiceCollection()
+    .AddScoped<IPayPalPayment, PayPalPayment>()
+    .AddScoped<IStripePayment, StripePayment>()
+    .AddScoped<IPaymentAdapter, PayPalAdapter>()
+    .AddScoped<IPaymentAdapter, StripeAdapter>()
+    .BuildServiceProvider();
+
+
+
+// Resolving Dependencies
+var payPalAdapter = serviceProvider.GetRequiredService<IPaymentAdapter>();
+//     "PayPalAdapter");
+var stripeAdapter = serviceProvider.GetRequiredService<IPaymentAdapter>();
+//  "StripeAdapter");
+
+// Using the Adapters
+Console.WriteLine(payPalAdapter.Pay(100));
+Console.WriteLine(stripeAdapter.Pay(150));
