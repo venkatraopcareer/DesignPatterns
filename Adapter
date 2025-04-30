@@ -1,0 +1,61 @@
+    public interface IPayPalPayment
+    {
+        bool makePayment(int amt);
+    }
+    public interface IStripePayment
+    {
+        bool ProcessPayment(int amt);
+    }
+
+    public class PayPalPayment : IPayPalPayment
+    {
+        public bool makePayment(int amt)
+        {
+            return true;
+        }
+
+    }
+    public class StripePayment : IStripePayment
+    {
+        public bool ProcessPayment(int amt) { return true; }
+    }
+
+    public interface IPaymentAdapter
+    {
+        bool Pay(int amout);
+    }
+
+    public class PayPalAdapter : IPaymentAdapter
+    {
+        readonly IPayPalPayment _payPalPayment;
+        public PayPalAdapter(IPayPalPayment payPalPayment)
+        {
+            _payPalPayment = payPalPayment;
+        }
+
+        public bool Pay(int amt)
+        {
+            return _payPalPayment.makePayment(amt);
+        }
+    }
+    public class StripeAdapter : IPaymentAdapter
+    {
+        readonly IStripePayment _stripePayment;
+        public StripeAdapter(IStripePayment stripePayment)
+        {
+            _stripePayment = stripePayment;
+        }
+
+        public bool Pay(int amt)
+        {
+            return _stripePayment.ProcessPayment(amt);
+        }
+    }
+}
+
+// Client
+   IPaymentAdapter pay = new PayPalAdapter(new PayPalPayment());
+   pay.Pay(100);
+
+   pay = new StripeAdapter(new StripePayment());
+   pay.Pay(100);
